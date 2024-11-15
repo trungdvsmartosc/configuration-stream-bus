@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: spring-cloud-config-client
+  profiles:
+    active: prod
+  config:
+    import: optional:configserver:http://localhost:8888
+  bus:
+    id: prod:prod:9be798be-32ce-405d-8f05-35c5442bbc2f
+    enabled: true
+    refresh:
+      enabled: true
+    env:
+      enabled: true
+    destination: prod
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: http://localhost:29092
+
+server:
+  port: 8081
+
+management:
+  endpoint:
+    refresh:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'

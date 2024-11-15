@@ -1,0 +1,43 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: spring-cloud-config-client
+  profiles:
+    active: dev
+  config:
+    import: optional:configserver:http://localhost:8888
+  bus:
+    id: dev:dev:a736c6c4-78ae-47c6-8e5b-5ec486946c87
+    enabled: true
+    refresh:
+      enabled: true
+    env:
+      enabled: true
+    destination: dev
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: http://localhost:29092
+
+management:
+  endpoint:
+    refresh:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+resilience4j.circuitbreaker:
+  instances:
+    myService:
+      registerHealthIndicator: true
+      failureRateThreshold: 50  # 50% failure rate to trigger the circuit breaker
+      waitDurationInOpenState: 10000ms  # Time to wait before attempting again
+      slidingWindowSize: 10  # Number of calls to track
+      permittedNumberOfCallsInHalfOpenState: 5  # Calls allowed in half-open state
+      recordExceptions:
+        - org.springframework.web.client.HttpServerErrorException
